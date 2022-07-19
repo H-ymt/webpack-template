@@ -10,8 +10,6 @@ const ejs_entry = ejs_list.map((v) => {
 });
 const entry = Object.fromEntries(ejs_entry);
 
-console.log(entry);
-
 module.exports = {
   entry: entry,
   output: {
@@ -39,5 +37,5 @@ module.exports = {
       template: 'src/index.ejs',
       minify: true
     })
-  ]
+  ],
 };
