@@ -58,7 +58,7 @@ module.exports = {
     }),
     ...html_list,
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
+      filename: '[contenthash].css',
     }),
   ],
 };
