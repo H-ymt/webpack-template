@@ -5,34 +5,36 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
-const removeExtension = (path) => {
-  return path.match(/(.+\/.+?).[a-z]+([?#;].*)?$/)[1];
-}
-const removeSrc = (path) => {
-  return path.replace(/src\//, "")
-}
 // srcディレクトリと拡張子を消す
 // ex: ./src/index.html -> ./index
 const arrangePath = (fullPath) => {
-  return removeSrc(removeExtension(fullPath));
+  const removedExtension = fullPath.match(/(.+\/.+?).[a-z]+([?#;].*)?$/)[1];
+  const removedSrcDir = removedExtension.replace(/src\//, "");
+  return removedSrcDir;
 }
 
-const ejs_list = glob.sync("./src/**/[!_]*.ejs");
-const entry_list = ejs_list.map((v) => [removeSrc(v), v])
-const entry = Object.fromEntries(entry_list);
+// src配下の全てのejsパスを取得する
+const getAllEjs = () => {
+  const ejsList = glob.sync("./src/**/[!_]*.ejs");
+  return ejsList;
+}
 
-const html_list = ejs_list.map((v) => {
-  return new HtmlWebpackPlugin({
-    filename: arrangePath(v) + ".html",
-    template: v,
-    minify: true
+// src配下の全てのejsを、ejsからhtmlに変換するプラグインを作成する
+const getHtmlPlugins = () => {
+  const ejsList = getAllEjs();
+  const htmlWebpackPlugins = ejsList.map((v) => {
+    return new HtmlWebpackPlugin({
+      filename: arrangePath(v) + ".html",
+      template: v,
+      minify: true
+    })
   })
-})
+  return htmlWebpackPlugins;
+}
 
-console.log(entry);
 
 module.exports = {
-  entry: entry,
+  entry: getAllEjs(),
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
@@ -45,9 +47,16 @@ module.exports = {
           {
             loader: "html-loader",
             options: {
-              // copy-webpack-pluginでpublicをまるごとコピーするため名前解決は行わない
-              sources: false,
-            }
+              sources: {
+                // copy-webpack-pluginでpublicをまるごとコピーするためcss以外の名前解決は行わない
+                urlFilter: (attribute, value, resourcePath) => {
+                  if (/\.(scss|sass|css)$/.test(value)) {
+                    return true;
+                  }
+                  return false;
+                },
+              }
+            },
           },
           "template-ejs-loader"
         ],
@@ -59,14 +68,18 @@ module.exports = {
     ],
   },
   plugins: [
+    // webpackの仕様上, 余計なjsファイルが生まれるので削除
     new RemoveEmptyScriptsPlugin({
       extensions: /\.(css|scss|sass|less|styl|ejs|html)([?].*)?$/,
       remove: /\.(js|mjs)$/
     }),
-    ...html_list,
+    // htmlをdistに出力
+    ...getHtmlPlugins(),
+    // cssをdistに出力
     new MiniCssExtractPlugin({
-      filename: '[contenthash].css',
+      filename: "[contenthash].css"
     }),
+    // publicフォルダーをdistにコピー
     new CopyWebpackPlugin({
       patterns: [
         { from: path.resolve(__dirname, "src/public"), to: path.resolve(__dirname, "dist/public") },
