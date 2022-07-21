@@ -42,7 +42,7 @@ module.exports = {
         test: /\.ejs$/,
         use: [
           "html-loader",
-          "ejs-html-loader"
+          "template-ejs-loader"
         ],
       },
       {
