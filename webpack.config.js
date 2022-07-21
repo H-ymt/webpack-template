@@ -48,9 +48,12 @@ module.exports = {
             loader: "html-loader",
             options: {
               sources: {
-                // copy-webpack-pluginでpublicをまるごとコピーするためcss以外の名前解決は行わない
+                // copy-webpack-pluginでpublicをまるごとコピーするためcss, js以外の名前解決は行わない
                 urlFilter: (attribute, value, resourcePath) => {
                   if (/\.(scss|sass|css)$/.test(value)) {
+                    return true;
+                  }
+                  if (/\.(js)$/.test(value)) {
                     return true;
                   }
                   return false;
@@ -71,7 +74,7 @@ module.exports = {
     // webpackの仕様上, 余計なjsファイルが生まれるので削除
     new RemoveEmptyScriptsPlugin({
       extensions: /\.(css|scss|sass|less|styl|ejs|html)([?].*)?$/,
-      remove: /\.(js|mjs)$/
+      remove: /main\.(js|mjs)$/
     }),
     // htmlをdistに出力
     ...getHtmlPlugins(),
