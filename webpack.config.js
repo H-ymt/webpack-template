@@ -1,5 +1,6 @@
 const glob = require("glob");
 const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
@@ -41,7 +42,13 @@ module.exports = {
       {
         test: /\.ejs$/,
         use: [
-          "html-loader",
+          {
+            loader: "html-loader",
+            options: {
+              // copy-webpack-pluginでpublicをまるごとコピーするため名前解決は行わない
+              sources: false,
+            }
+          },
           "template-ejs-loader"
         ],
       },
@@ -59,6 +66,11 @@ module.exports = {
     ...html_list,
     new MiniCssExtractPlugin({
       filename: '[contenthash].css',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, "src/public"), to: path.resolve(__dirname, "dist/public") },
+      ],
     }),
   ],
 };
