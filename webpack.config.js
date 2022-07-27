@@ -4,6 +4,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const posthtml = require("posthtml");
+const posthtmlCollectStylesPlugin = require("posthtml-collect-styles")("style")
 
 // srcディレクトリと拡張子を消す
 // ex: ./src/index.html -> ./index
@@ -48,8 +50,8 @@ module.exports = {
           {
             loader: "html-loader",
             options: {
+              // copy-webpack-pluginでpublicをまるごとコピーするためcss, js以外の名前解決は行わない
               sources: {
-                // copy-webpack-pluginでpublicをまるごとコピーするためcss, js以外の名前解決は行わない
                 urlFilter: (attribute, value, resourcePath) => {
                   if (/\.(scss|sass|css)$/.test(value)) {
                     return true;
@@ -59,7 +61,20 @@ module.exports = {
                   }
                   return false;
                 },
-              }
+              },
+              // cssのすべてのインポート位置をheadに移す
+              preprocessor: (content, loaderContext) => {
+                let result;
+                try {
+                  result = posthtml().use(posthtmlCollectStylesPlugin).process(content, { sync: true });
+                } catch (error) {
+                  loaderContext.emitError(error);
+
+                  return content;
+                }
+
+                return result.html;
+              },
             },
           },
           "template-ejs-loader"
