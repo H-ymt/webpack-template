@@ -1,10 +1,12 @@
 const glob = require("glob");
+const fs = require("fs");
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const posthtml = require("posthtml");
+const { parse } = require("path");
 const posthtmlCollectStylesPlugin = require("posthtml-collect-styles")("style")
 
 // srcディレクトリと拡張子を消す
@@ -77,7 +79,31 @@ module.exports = {
               },
             },
           },
-          "template-ejs-loader"
+          {
+
+            loader: "template-ejs-loader",
+            options: {
+              includer: (originalPath, parsedPath) => {
+                let filename = "";
+                if (/^\./.test(originalPath)) {
+                  // includeでパスが'.'から始まる場合
+                  filename = parsedPath;
+                } else if (/^\//.test(originalPath)) {
+                  // includeでパスが'/'から始まる場合
+                  filename = path.resolve(__dirname, "src", "." + originalPath);
+                } else {
+                  console.log(originalPath, parsedPath);
+                  filename = path.resolve(__dirname, "src", originalPath);
+                }
+
+                if (filename && fs.existsSync(filename)) {
+                  return { filename };
+                }
+                // ファイルが存在しない場合
+                throw new Error("Not Found: could not resolve " + originalPath);
+              }
+            }
+          }
         ],
       },
       {
@@ -85,6 +111,10 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
     ],
+  },
+  resolve: {
+    modules: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "src")],
+    roots: [path.resolve(__dirname, "src")]
   },
   plugins: [
     // webpackの仕様上, 余計なjsファイルが生まれるので削除
