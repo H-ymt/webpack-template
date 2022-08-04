@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --mode=development",
     "build": "webpack --mode=production",
-    "watch": "browser-sync start -s dist -w dist/** & webpack --mode=development --watch"
+    "watch": "webpack --mode=development --watch",
+    "server": "browser-sync start -s dist -w dist/**"
   },
   "author": "",
   "license": "ISC",

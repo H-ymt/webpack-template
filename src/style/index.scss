@@ -1,7 +1,5 @@
 @use "_variables.scss" as v;
 
 body {
-  div {
-    background-color: pink;
-  }
+  background-color: v.$color-a;
 }

@@ -23,6 +23,14 @@ const getAllEjs = () => {
   return ejsList;
 }
 
+const getEntry = () => {
+  const entry = {};
+  getAllEjs().forEach((v) => {
+    entry[arrangePath(v)] = v;
+  });
+  return entry;
+}
+
 // src配下の全てのejsを、ejsからhtmlに変換するプラグインを作成する
 const getHtmlPlugins = () => {
   const ejsList = getAllEjs();
@@ -38,7 +46,7 @@ const getHtmlPlugins = () => {
 
 
 module.exports = {
-  entry: getAllEjs(),
+  entry: getEntry(),
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
@@ -126,7 +134,7 @@ module.exports = {
     ...getHtmlPlugins(),
     // cssをdistに出力
     new MiniCssExtractPlugin({
-      filename: "[contenthash].css"
+      filename: "[name]-[contenthash].css"
     }),
     // publicフォルダーをdistにコピー
     new CopyWebpackPlugin({
