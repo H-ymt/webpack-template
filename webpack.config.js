@@ -73,19 +73,6 @@ module.exports = {
                   return false;
                 },
               },
-              // cssのすべてのインポート位置をheadに移す
-              preprocessor: (content, loaderContext) => {
-                let result;
-                try {
-                  result = posthtml().use(posthtmlCollectStylesPlugin).process(content, { sync: true });
-                } catch (error) {
-                  loaderContext.emitError(error);
-
-                  return content;
-                }
-
-                return result.html;
-              },
             },
           },
           {
