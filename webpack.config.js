@@ -38,6 +38,7 @@ const getHtmlPlugins = () => {
     return new HtmlWebpackPlugin({
       filename: arrangePath(v) + ".html",
       template: v,
+      chunks: [arrangePath(v)], // デフォルトはallなので全てのcssやjsが挿入されてしまう
       minify: true
     })
   })
@@ -100,7 +101,6 @@ module.exports = {
                   // includeでパスが'/'から始まる場合
                   filename = path.resolve(__dirname, "src", "." + originalPath);
                 } else {
-                  console.log(originalPath, parsedPath);
                   filename = path.resolve(__dirname, "src", originalPath);
                 }
 
