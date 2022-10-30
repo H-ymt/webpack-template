@@ -33,7 +33,7 @@ const getHtmlPlugins = () => {
   const ejsList = getAllEjs();
   const htmlWebpackPlugins = ejsList.map((v) => {
     return new HtmlWebpackPlugin({
-      filename: arrangePath(v) + ".htm",
+      filename: arrangePath(v) + ".html",
       template: v,
       chunks: [arrangePath(v)], // デフォルトはallなので全てのcssやjsが挿入されてしまう
     });
