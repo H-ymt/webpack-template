@@ -21,7 +21,6 @@
     "html-loader": "^4.1.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.1",
-    "posthtml-collect-styles": "^0.0.1",
     "sass": "^1.45.1",
     "sass-loader": "^12.4.0",
     "template-ejs-loader": "^0.9.3",
