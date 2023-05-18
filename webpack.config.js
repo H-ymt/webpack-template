@@ -32,10 +32,11 @@ const getEntry = () => {
 const getHtmlPlugins = () => {
   const ejsList = getAllEjs();
   const htmlWebpackPlugins = ejsList.map((v) => {
+    const adjustedPath = v.replace("src/sub/", "");
     return new HtmlWebpackPlugin({
-      filename: arrangePath(v) + ".html",
-      template: v,
-      chunks: [arrangePath(v)], // デフォルトはallなので全てのcssやjsが挿入されてしまう
+      filename: arrangePath(adjustedPath) + ".html",
+      template: adjustedPath,
+      chunks: [arrangePath(adjustedPath)],
     });
   });
   return htmlWebpackPlugins;
@@ -108,10 +109,7 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [
-      path.resolve(__dirname, "node_modules"),
-      path.resolve(__dirname, "src"),
-    ],
+    modules: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "src")],
     roots: [path.resolve(__dirname, "src")],
   },
   plugins: [
