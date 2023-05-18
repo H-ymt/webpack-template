@@ -8,7 +8,7 @@ Webpack で FLOCSS × Sass のコーディングをするためのスタータ�
 
 ## Webpack の機能
 
-webpack.config.js に書いている機能としては大体以下の機能。
+webpack.config.js に書いている機能としては以下のとおり。
 
 - webpack で ejs を html に変換する
 - フッターやヘッダーなどの共通部分を include で読み込む
