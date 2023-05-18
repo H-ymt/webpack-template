@@ -3,7 +3,16 @@
   <link rel="stylesheet" href="./style/index.scss" />
   <body>
     <%- include("./template/_header.ejs") %>
-    <div>index.ejs</div>
+
+    <main class="l-main">
+      <div>Main</div>
+      <section class="p-about c-inner">
+        <h1>About Section Title</h1>
+        <p class="p-about__text">Text</p>
+        <img class="p-about__img" src="/Lofi-Girl.jpg" alt="" />
+      </section>
+    </main>
+
     <%- include("./template/_footer.ejs") %>
     <script type="text/javascript" charset="utf-8" src="./script/script.js"></script>
   </body>

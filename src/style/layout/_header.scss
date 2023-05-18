@@ -1,0 +1,13 @@
+.l-header {
+  padding: 1rem;
+  background: rgb(78, 74, 74);
+}
+
+.l-header-nav__item {
+  display: flex;
+  gap: 1rem;
+  justify-content: left;
+  align-items: center;
+  height: 80px;
+  color: whitesmoke;
+}

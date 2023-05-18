@@ -1,0 +1,23 @@
+@use "../global/" as *;
+
+body {
+  font-size: 16px;
+  background: rgb(225, 221, 221);
+}
+
+h1 {
+  font-size: 2rem;
+
+  @include mq(md) {
+    font-size: 3rem;
+  }
+}
+
+section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+a {
+  color: inherit;
+}

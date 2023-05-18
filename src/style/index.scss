@@ -1,5 +1,32 @@
-@use "_variables.scss" as v;
+// ──────────────────────────────
+// foundation
+// ──────────────────────────────
+@use "./foundation/base";
+@use "./foundation/reset";
 
-body {
-  background-color: v.$color-a;
-}
+// ──────────────────────────────
+// layout
+// ──────────────────────────────
+@use "./layout/header";
+@use "./layout/main";
+@use "./layout/footer";
+
+// ──────────────────────────────
+// object
+// ──────────────────────────────
+// ───────────────
+// component
+// ───────────────
+@use "./object/component/inner";
+
+// ───────────────
+// project
+// ───────────────
+// ───────
+// home
+// ───────
+@use "./object/project/home/about";
+
+// ───────────────
+// object
+// ───────────────
